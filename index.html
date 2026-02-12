@@ -1,1113 +1,1143 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover"
-    />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300..700&display=swap"
-      rel="stylesheet"
-    />
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
-    />
-    <style>
-      * {
-        padding: 0;
-        margin: 0;
-        box-sizing: border-box;
-        -webkit-tap-highlight-color: transparent;
-        user-select: none;
-      }
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300..700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+  <style>
+    * {
+      padding: 0;
+      margin: 0;
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+    }
 
-      body {
-        background: radial-gradient(circle at 10% 30%, #ffdde2, #ffb6c1);
-        font-family: "Quicksand", sans-serif;
-        min-height: 100vh;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        padding: 16px;
-        touch-action: pan-y;
-      }
+    body {
+      background: radial-gradient(circle at 10% 30%, #ffdde2, #ffb6c1);
+      font-family: 'Quicksand', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 16px;
+      touch-action: pan-y;
+    }
 
-      .game-board {
-        position: relative;
-        width: 100%;
-        max-width: 650px;
-        min-width: 320px;
-        height: auto;
-        min-height: 750px;
-        background: rgba(255, 240, 245, 0.85);
-        backdrop-filter: blur(20px);
-        -webkit-backdrop-filter: blur(20px);
-        border-radius: 56px;
-        box-shadow: 0 30px 50px rgba(220, 60, 100, 0.4);
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: flex-start;
-        border: 3px solid rgba(255, 255, 255, 0.95);
-        overflow: hidden;
-        padding: 24px 20px;
-        margin: 0 auto;
-      }
+    .game-board {
+      position: relative;
+      width: 100%;
+      max-width: 750px;
+      min-width: 320px;
+      height: auto;
+      min-height: 850px;
+      background: rgba(255, 240, 245, 0.85);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-radius: 56px;
+      box-shadow: 0 30px 50px rgba(220, 60, 100, 0.4);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      border: 3px solid rgba(255, 255, 255, 0.95);
+      overflow: hidden;
+      padding: 24px 20px;
+      margin: 0 auto;
+    }
 
-      .floating-heart {
-        position: absolute;
-        color: #ff8da1;
-        font-size: clamp(20px, 4vw, 28px);
-        opacity: 0.3;
-        pointer-events: none;
-        z-index: 0;
-        animation: float 7s infinite ease-in-out;
-      }
+    .floating-heart {
+      position: absolute;
+      color: #ff8da1;
+      font-size: clamp(20px, 4vw, 28px);
+      opacity: 0.3;
+      pointer-events: none;
+      z-index: 0;
+      animation: float 7s infinite ease-in-out;
+    }
 
-      @keyframes float {
-        0% {
-          transform: translateY(0) rotate(0deg);
-          opacity: 0.2;
-        }
-        50% {
-          transform: translateY(-40px) rotate(15deg);
-          opacity: 0.6;
-        }
-        100% {
-          transform: translateY(0) rotate(0deg);
-          opacity: 0.2;
-        }
-      }
+    @keyframes float {
+      0% { transform: translateY(0) rotate(0deg); opacity: 0.2; }
+      50% { transform: translateY(-40px) rotate(15deg); opacity: 0.6; }
+      100% { transform: translateY(0) rotate(0deg); opacity: 0.2; }
+    }
 
-      .container,
-      .landing-container {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: flex-start;
-        width: 100%;
-        height: 100%;
-        position: relative;
-        z-index: 10;
-      }
+    .container, .landing-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      width: 100%;
+      height: 100%;
+      position: relative;
+      z-index: 10;
+    }
 
-      .hidden {
-        display: none !important;
-      }
+    .hidden {
+      display: none !important;
+    }
 
-      /* ----- LANDING PAGE ----- */
-      .boy-setup {
-        background: rgba(255, 220, 240, 0.8);
-        backdrop-filter: blur(10px);
-        -webkit-backdrop-filter: blur(10px);
-        border-radius: 48px;
-        padding: clamp(24px, 6vw, 40px);
-        border: 3px solid white;
-        box-shadow: 0 15px 0 rgba(170, 100, 120, 0.2);
-        width: 100%;
-        max-width: 550px;
-        margin: 0 auto;
-      }
+    /* ----- LANDING PAGE WITH QUESTION DROPDOWN ----- */
+    .setup-card {
+      background: rgba(255, 220, 240, 0.8);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border-radius: 48px;
+      padding: clamp(24px, 6vw, 40px);
+      border: 3px solid white;
+      box-shadow: 0 15px 0 rgba(170, 100, 120, 0.2);
+      width: 100%;
+      max-width: 600px;
+      margin: 0 auto;
+    }
 
-      .boy-setup h1 {
-        font-size: clamp(2rem, 7vw, 2.6rem);
-        color: #b33a4c;
-        text-shadow: 3px 3px 0 white;
-        margin-bottom: 30px;
-        text-align: center;
-      }
+    .setup-card h1 {
+      font-size: clamp(2rem, 7vw, 2.6rem);
+      color: #b33a4c;
+      text-shadow: 3px 3px 0 white;
+      margin-bottom: 30px;
+      text-align: center;
+    }
 
-      .input-group {
-        display: flex;
-        flex-direction: column;
-        gap: 10px;
-        margin-bottom: 22px;
-        width: 100%;
-      }
+    .input-group {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 22px;
+      width: 100%;
+    }
 
-      .input-group label {
-        font-size: clamp(1rem, 4vw, 1.2rem);
-        font-weight: 700;
-        color: #681c2c;
-        display: flex;
-        align-items: center;
-        gap: 12px;
-      }
+    .input-group label {
+      font-size: clamp(1rem, 4vw, 1.2rem);
+      font-weight: 700;
+      color: #681c2c;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
 
-      .input-group input {
-        padding: clamp(16px, 4vw, 20px) clamp(20px, 5vw, 24px);
-        border-radius: 60px;
-        border: 3px solid white;
-        font-size: clamp(1rem, 4vw, 1.2rem);
-        font-family: "Quicksand", sans-serif;
-        background: white;
-        box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.05);
-        outline: none;
-        width: 100%;
-      }
+    .input-group input {
+      padding: clamp(16px, 4vw, 20px) clamp(20px, 5vw, 24px);
+      border-radius: 60px;
+      border: 3px solid white;
+      font-size: clamp(1rem, 4vw, 1.2rem);
+      font-family: 'Quicksand', sans-serif;
+      background: white;
+      box-shadow: inset 0 2px 10px rgba(0,0,0,0.05);
+      outline: none;
+      width: 100%;
+    }
 
-      .generate-btn {
-        background: linear-gradient(145deg, #ff3b6f, #ff1a4c);
-        border: none;
-        border-radius: 60px;
-        padding: clamp(18px, 5vw, 20px);
-        font-size: clamp(1.3rem, 5vw, 1.5rem);
-        font-weight: 700;
-        color: white;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 15px;
-        border: 3px solid white;
-        box-shadow: 0 12px 0 #b3304a;
-        cursor: pointer;
-        transition: 0.1s;
-        width: 100%;
-        margin-top: 15px;
-      }
+    /* ----- NEW: QUESTION SELECTOR DROPDOWN ----- */
+    .question-selector {
+      background: linear-gradient(145deg, #fff9fb, #fff0f5);
+      border-radius: 60px;
+      padding: 8px;
+      border: 3px solid white;
+      margin-bottom: 25px;
+      width: 100%;
+    }
 
-      .generate-btn:active {
-        transform: scale(0.97);
-        box-shadow: 0 8px 0 #b3304a;
-      }
+    .question-selector label {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #59001c;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 0 10px;
+    }
 
-      /* ----- SHARE OPTIONS (NEW) ----- */
-      .share-options {
-        background: rgba(255, 245, 250, 0.95);
-        border-radius: 40px;
-        padding: 25px 20px;
-        margin-top: 25px;
-        border: 3px solid white;
-        width: 100%;
-      }
+    .question-dropdown {
+      width: 100%;
+      padding: clamp(16px, 4vw, 20px) clamp(20px, 5vw, 24px);
+      border-radius: 60px;
+      border: 3px solid #ffb6c1;
+      font-size: clamp(1.1rem, 4vw, 1.3rem);
+      font-family: 'Quicksand', sans-serif;
+      background: white;
+      color: #59001c;
+      font-weight: 600;
+      cursor: pointer;
+      appearance: none;
+      background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='%23ff4757'><path d='M7 10l5 5 5-5z'/></svg>");
+      background-repeat: no-repeat;
+      background-position: right 20px center;
+      background-size: 30px;
+    }
 
-      .share-title {
-        font-size: 1.3rem;
-        font-weight: 700;
-        color: #681c2c;
-        margin-bottom: 20px;
-        display: flex;
-        align-items: center;
-        gap: 10px;
-      }
+    .question-dropdown:focus {
+      outline: none;
+      border-color: #ff4757;
+      box-shadow: 0 0 0 3px rgba(255, 71, 87, 0.2);
+    }
 
-      .whatsapp-share-btn {
-        background: #25d366;
-        border: 3px solid white;
-        border-radius: 60px;
-        padding: 16px 24px;
-        color: white;
-        font-size: 1.3rem;
-        font-weight: 700;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 15px;
-        box-shadow: 0 8px 0 #128c7e;
-        cursor: pointer;
-        width: 100%;
-        margin-bottom: 15px;
-      }
+    .question-dropdown option {
+      font-family: 'Quicksand', sans-serif;
+      padding: 15px;
+      font-size: 1.2rem;
+    }
 
-      .copy-link-btn {
-        background: #ff8da1;
-        border: 3px solid white;
-        border-radius: 60px;
-        padding: 16px 24px;
-        color: #59001c;
-        font-size: 1.2rem;
-        font-weight: 700;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 15px;
-        box-shadow: 0 8px 0 #b36b6b;
-        cursor: pointer;
-        width: 100%;
-      }
+    .generate-btn {
+      background: linear-gradient(145deg, #ff3b6f, #ff1a4c);
+      border: none;
+      border-radius: 60px;
+      padding: clamp(18px, 5vw, 20px);
+      font-size: clamp(1.3rem, 5vw, 1.5rem);
+      font-weight: 700;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 15px;
+      border: 3px solid white;
+      box-shadow: 0 12px 0 #b3304a;
+      cursor: pointer;
+      transition: 0.1s;
+      width: 100%;
+      margin-top: 15px;
+    }
 
-      /* ----- GAME SCREEN ----- */
-      .status-area {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        width: 100%;
-        max-width: 550px;
-        margin-bottom: 16px;
-        font-weight: 700;
-        color: #681c2c;
-        background: rgba(255, 210, 220, 0.95);
-        padding: clamp(12px, 3vw, 14px) clamp(20px, 5vw, 24px);
-        border-radius: 60px;
-        backdrop-filter: blur(5px);
-        border: 2px solid white;
-        font-size: clamp(1rem, 4vw, 1.2rem);
-      }
+    .generate-btn:active {
+      transform: scale(0.97);
+      box-shadow: 0 8px 0 #b3304a;
+    }
 
-      .love-meter {
-        width: 100%;
-        max-width: 550px;
-        background: #ffeef0;
-        height: clamp(22px, 4vw, 26px);
-        border-radius: 40px;
-        margin: 10px auto;
-        border: 3px solid white;
-        overflow: hidden;
-      }
+    .share-options {
+      background: rgba(255, 245, 250, 0.95);
+      border-radius: 40px;
+      padding: 25px 20px;
+      margin-top: 25px;
+      border: 3px solid white;
+      width: 100%;
+    }
 
-      .love-fill {
-        width: 20%;
-        height: 100%;
-        background: linear-gradient(90deg, #ff5e7a, #ff2a4a);
-        transition: width 0.3s ease;
-        border-radius: 40px;
-      }
+    .share-title {
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: #681c2c;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
 
-      .local-gif,
-      .gif-result {
-        width: 100%;
-        max-width: 280px;
-        height: auto;
-        border-radius: 48px;
-        box-shadow: 0 20px 40px rgba(190, 60, 90, 0.4);
-        margin: 0 auto 20px auto;
-        display: block;
-        border: 5px solid white;
-      }
+    .whatsapp-share-btn {
+      background: #25D366;
+      border: 3px solid white;
+      border-radius: 60px;
+      padding: 16px 24px;
+      color: white;
+      font-size: 1.3rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 15px;
+      box-shadow: 0 8px 0 #128C7E;
+      cursor: pointer;
+      width: 100%;
+      margin-bottom: 15px;
+    }
 
-      h2 {
-        font-size: clamp(2rem, 7vw, 2.6rem);
-        font-weight: 700;
-        color: #b33a4c;
-        text-shadow: 4px 4px 0 #ffe6ec;
-        margin-bottom: 20px;
-        text-align: center;
-        line-height: 1.2;
-      }
+    .copy-link-btn {
+      background: #ff8da1;
+      border: 3px solid white;
+      border-radius: 60px;
+      padding: 16px 24px;
+      color: #59001c;
+      font-size: 1.2rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 15px;
+      box-shadow: 0 8px 0 #b36b6b;
+      cursor: pointer;
+      width: 100%;
+    }
 
-      .button-container {
-        position: relative;
-        width: 100%;
-        max-width: 550px;
-        height: clamp(200px, 50vw, 260px);
-        margin: 15px auto;
-        touch-action: none;
-        border-radius: 48px;
-        background: rgba(255, 220, 230, 0.3);
-        border: 2px dashed rgba(255, 200, 210, 0.6);
-      }
+    /* ----- GAME SCREEN ----- */
+    .status-area {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 100%;
+      max-width: 600px;
+      margin-bottom: 16px;
+      font-weight: 700;
+      color: #681c2c;
+      background: rgba(255, 210, 220, 0.95);
+      padding: clamp(12px, 3vw, 14px) clamp(20px, 5vw, 24px);
+      border-radius: 60px;
+      backdrop-filter: blur(5px);
+      border: 2px solid white;
+      font-size: clamp(1rem, 4vw, 1.2rem);
+    }
 
-      .yes-btn {
-        position: absolute;
-        border: none;
-        border-radius: 120px;
-        padding: clamp(16px, 4vw, 20px) clamp(32px, 6vw, 42px);
-        font-family: "Quicksand", sans-serif;
-        font-size: clamp(1.6rem, 5vw, 2rem);
-        font-weight: 700;
-        cursor: pointer;
-        background: #ff3b6f;
-        color: white;
-        box-shadow:
-          0 12px 0 #b3304a,
-          0 0 40px #ff98a8;
-        border: 4px solid white;
-        left: 15%;
-        top: 30%;
-        z-index: 30;
-        white-space: nowrap;
-        transition: transform 0.1s;
-      }
+    .love-meter {
+      width: 100%;
+      max-width: 600px;
+      background: #ffeef0;
+      height: clamp(22px, 4vw, 26px);
+      border-radius: 40px;
+      margin: 10px auto;
+      border: 3px solid white;
+      overflow: hidden;
+    }
 
-      .no-div {
-        position: absolute;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        border-radius: 120px;
-        padding: clamp(16px, 4vw, 20px) clamp(32px, 6vw, 42px);
-        font-family: "Quicksand", sans-serif;
-        font-size: clamp(1.6rem, 5vw, 2rem);
-        font-weight: 700;
-        background: #7a4c5c;
-        color: white;
-        box-shadow:
-          0 12px 0 #4e2e38,
-          0 15px 35px rgba(100, 50, 70, 0.6);
-        border: 4px solid white;
-        white-space: nowrap;
-        z-index: 50;
-        cursor: default;
-        transition: none;
-        will-change: left, top;
-        left: 65%;
-        top: 30%;
-      }
+    .love-fill {
+      width: 20%;
+      height: 100%;
+      background: linear-gradient(90deg, #ff5e7a, #ff2a4a);
+      transition: width 0.3s ease;
+      border-radius: 40px;
+    }
 
-      .couple-badge {
-        background: linear-gradient(145deg, #ffd700, #ffb347);
-        color: #4a1e2a;
-        border-radius: 60px;
-        padding: clamp(12px, 3vw, 14px) clamp(24px, 5vw, 28px);
-        font-size: clamp(1.1rem, 4vw, 1.3rem);
-        font-weight: 700;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 12px;
-        border: 3px solid white;
-        box-shadow: 0 6px 0 #b8860b;
-        margin-top: 25px;
-        width: 100%;
-        max-width: 450px;
-      }
+    .local-gif, .gif-result {
+      width: 100%;
+      max-width: 280px;
+      height: auto;
+      border-radius: 48px;
+      box-shadow: 0 20px 40px rgba(190, 60, 90, 0.4);
+      margin: 0 auto 20px auto;
+      display: block;
+      border: 5px solid white;
+    }
 
-      /* ----- RETURN STACK (RESULTS BOARD) ----- */
-      .return-stack {
-        background: rgba(255, 240, 245, 0.95);
-        border-radius: 48px;
-        padding: 25px;
-        margin: 20px 0;
-        border: 3px solid white;
-        width: 100%;
-        max-width: 550px;
-      }
+    h2 {
+      font-size: clamp(1.8rem, 6vw, 2.4rem);
+      font-weight: 700;
+      color: #b33a4c;
+      text-shadow: 4px 4px 0 #ffe6ec;
+      margin-bottom: 20px;
+      text-align: center;
+      line-height: 1.3;
+      padding: 0 10px;
+    }
 
-      .stack-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 20px;
-      }
+    .button-container {
+      position: relative;
+      width: 100%;
+      max-width: 600px;
+      height: clamp(200px, 50vw, 260px);
+      margin: 15px auto;
+      touch-action: none;
+      border-radius: 48px;
+      background: rgba(255, 220, 230, 0.3);
+      border: 2px dashed rgba(255, 200, 210, 0.6);
+    }
 
-      .stack-header h3 {
-        font-size: 1.5rem;
-        color: #681c2c;
-        display: flex;
-        align-items: center;
-        gap: 10px;
-      }
+    .yes-btn {
+      position: absolute;
+      border: none;
+      border-radius: 120px;
+      padding: clamp(16px, 4vw, 20px) clamp(32px, 6vw, 42px);
+      font-family: 'Quicksand', sans-serif;
+      font-size: clamp(1.6rem, 5vw, 2rem);
+      font-weight: 700;
+      cursor: pointer;
+      background: #ff3b6f;
+      color: white;
+      box-shadow: 0 12px 0 #b3304a, 0 0 40px #ff98a8;
+      border: 4px solid white;
+      left: 15%;
+      top: 30%;
+      z-index: 30;
+      white-space: nowrap;
+      transition: transform 0.1s;
+    }
 
-      .result-card {
-        background: white;
-        border-radius: 30px;
-        padding: 20px;
-        margin-bottom: 15px;
-        border: 2px solid #ffb6c1;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-      }
+    .no-div {
+      position: absolute;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 120px;
+      padding: clamp(16px, 4vw, 20px) clamp(32px, 6vw, 42px);
+      font-family: 'Quicksand', sans-serif;
+      font-size: clamp(1.6rem, 5vw, 2rem);
+      font-weight: 700;
+      background: #7a4c5c;
+      color: white;
+      box-shadow: 0 12px 0 #4e2e38, 0 15px 35px rgba(100, 50, 70, 0.6);
+      border: 4px solid white;
+      white-space: nowrap;
+      z-index: 50;
+      cursor: default;
+      transition: none;
+      will-change: left, top;
+      left: 65%;
+      top: 30%;
+    }
 
-      .result-card .names {
-        font-size: 1.2rem;
-        font-weight: 700;
-        color: #59001c;
-      }
+    .couple-badge {
+      background: linear-gradient(145deg, #ffd700, #ffb347);
+      color: #4a1e2a;
+      border-radius: 60px;
+      padding: clamp(12px, 3vw, 14px) clamp(24px, 5vw, 28px);
+      font-size: clamp(1.1rem, 4vw, 1.3rem);
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      border: 3px solid white;
+      box-shadow: 0 6px 0 #b8860b;
+      margin-top: 25px;
+      width: 100%;
+      max-width: 500px;
+    }
 
-      .result-card .rejection-badge {
-        background: #ff4757;
-        color: white;
-        padding: 8px 16px;
-        border-radius: 40px;
-        font-weight: 700;
-        border: 2px solid white;
-      }
+    .question-badge {
+      background: rgba(255, 255, 255, 0.9);
+      border-radius: 60px;
+      padding: 12px 25px;
+      margin-top: 10px;
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: #59001c;
+      border: 2px solid #ffb6c1;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+    }
 
-      .share-more-btn {
-        background: #ff8da1;
-        border: 3px solid white;
-        border-radius: 60px;
-        padding: 16px 24px;
-        color: #59001c;
-        font-size: 1.2rem;
-        font-weight: 700;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 15px;
-        box-shadow: 0 8px 0 #b36b6b;
-        cursor: pointer;
-        width: 100%;
-        margin-top: 10px;
-      }
+    /* ----- RETURN STACK & CREATE NEW CHALLENGE ----- */
+    .return-stack {
+      background: rgba(255, 240, 245, 0.95);
+      border-radius: 48px;
+      padding: 25px;
+      margin: 20px 0;
+      border: 3px solid white;
+      width: 100%;
+      max-width: 600px;
+    }
 
-      .whatsapp-share {
-        background: #25d366;
-        border: 3px solid white;
-        border-radius: 60px;
-        padding: clamp(16px, 4vw, 18px) clamp(30px, 6vw, 36px);
-        color: white;
-        font-size: clamp(1.2rem, 5vw, 1.4rem);
-        font-weight: 700;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 15px;
-        box-shadow: 0 8px 0 #128c7e;
-        cursor: pointer;
-        width: 100%;
-        max-width: 400px;
-      }
+    .stack-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
 
-      .heart-loader {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        width: 100%;
-        height: 200px;
-      }
+    .stack-header h3 {
+      font-size: 1.5rem;
+      color: #681c2c;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
 
-      .heart-loader div {
-        font-size: clamp(4rem, 12vw, 6rem);
-        animation: pulse 1s infinite;
-      }
+    .result-card {
+      background: white;
+      border-radius: 30px;
+      padding: 20px;
+      margin-bottom: 15px;
+      border: 2px solid #ffb6c1;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
 
-      @keyframes pulse {
-        0% {
-          transform: scale(1);
-        }
-        50% {
-          transform: scale(1.2);
-        }
-        100% {
-          transform: scale(1);
-        }
-      }
+    .result-card .names {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: #59001c;
+    }
 
-      @media (min-width: 1024px) {
-        .game-board {
-          max-width: 700px;
-        }
-        .yes-btn:hover {
-          transform: scale(1.05);
-        }
-      }
-    </style>
-  </head>
-  <body>
-    <div class="game-board">
-      <!-- Floating Hearts -->
-      <div class="floating-heart" style="top: 3%; left: 5%">💑</div>
-      <div class="floating-heart" style="top: 8%; right: 8%">💕</div>
-      <div class="floating-heart" style="bottom: 10%; left: 8%">💘</div>
-      <div class="floating-heart" style="bottom: 15%; right: 12%">💖</div>
+    .result-card .rejection-badge {
+      background: #ff4757;
+      color: white;
+      padding: 8px 16px;
+      border-radius: 40px;
+      font-weight: 700;
+      border: 2px solid white;
+    }
 
-      <!-- LANDING PAGE (SENDER SETUP) -->
-      <div id="landingContainer" class="landing-container">
-        <div class="boy-setup">
-          <h1>💘 COUPLE CHALLENGE</h1>
+    .whatsapp-share {
+      background: #25D366;
+      border: 3px solid white;
+      border-radius: 60px;
+      padding: clamp(16px, 4vw, 18px) clamp(30px, 6vw, 36px);
+      color: white;
+      font-size: clamp(1.2rem, 5vw, 1.4rem);
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 15px;
+      box-shadow: 0 8px 0 #128C7E;
+      cursor: pointer;
+      width: 100%;
+      max-width: 550px;
+      margin-bottom: 12px;
+    }
 
-          <div class="input-group">
-            <label><i class="fas fa-user"></i> YOUR NAME (SENDER)</label>
-            <input
-              type="text"
-              id="senderName"
-              placeholder="e.g. John"
-              value="Great"
-            />
-          </div>
+    .create-challenge-section {
+      background: linear-gradient(145deg, #fff0f5, #ffe6f0);
+      border-radius: 48px;
+      padding: 30px 25px;
+      margin: 20px 0;
+      border: 4px solid #ffb3c6;
+      box-shadow: 0 12px 0 #d48c9c;
+      width: 100%;
+      max-width: 600px;
+      text-align: center;
+    }
 
-          <div class="input-group">
-            <label><i class="fas fa-heart"></i> THEIR NAME (RECEIVER)</label>
-            <input
-              type="text"
-              id="receiverName"
-              placeholder="e.g. Sarah"
-              value="Sarah"
-            />
-          </div>
+    .create-challenge-btn {
+      background: linear-gradient(145deg, #ff6b81, #ff4757);
+      border: none;
+      border-radius: 60px;
+      padding: 22px 30px;
+      font-size: 1.8rem;
+      font-weight: 900;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 20px;
+      border: 5px solid white;
+      box-shadow: 0 15px 0 #9e3a4a, 0 20px 40px rgba(255, 70, 100, 0.5);
+      cursor: pointer;
+      transition: 0.1s;
+      width: 100%;
+      text-shadow: 2px 2px 0 rgba(0,0,0,0.1);
+      letter-spacing: 2px;
+    }
 
-          <div class="input-group">
-            <label><i class="fab fa-whatsapp"></i> YOUR WHATSAPP</label>
-            <input
-              type="text"
-              id="whatsappNumber"
-              placeholder="2349166145024"
-            />
-          </div>
+    .create-challenge-btn:active {
+      transform: scale(0.96);
+      box-shadow: 0 10px 0 #9e3a4a;
+    }
 
-          <button id="generateLinkBtn" class="generate-btn">
-            <i class="fas fa-gift"></i> GENERATE CHALLENGE
-          </button>
+    .challenge-hint {
+      margin-top: 15px;
+      color: #59001c;
+      font-size: 1.1rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
 
-          <!-- SHARE OPTIONS - NEW -->
-          <div id="shareOptionsContainer" class="share-options hidden">
-            <div class="share-title">
-              <i class="fas fa-share-alt"></i> SHARE CHALLENGE
-            </div>
+    .heart-loader {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      height: 200px;
+    }
 
-            <!-- Direct WhatsApp Share -->
-            <div id="whatsappDirectShare" class="whatsapp-share-btn">
-              <i class="fab fa-whatsapp"></i> SHARE VIA WHATSAPP
-            </div>
+    .heart-loader div {
+      font-size: clamp(4rem, 12vw, 6rem);
+      animation: pulse 1s infinite;
+    }
 
-            <!-- Copy Link -->
-            <div id="copyLinkBtn2" class="copy-link-btn">
-              <i class="fas fa-copy"></i> COPY LINK
-            </div>
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.2); }
+      100% { transform: scale(1); }
+    }
 
-            <!-- Generated Link Display -->
-            <div
-              id="generatedLinkDisplay"
-              style="
-                margin-top: 15px;
-                font-size: 0.8rem;
-                color: #666;
-                word-break: break-all;
-                background: #ffeef0;
-                padding: 12px;
-                border-radius: 20px;
-              "
-            ></div>
-          </div>
-        </div>
-      </div>
+    @media (min-width: 1024px) {
+      .game-board { max-width: 800px; }
+      .create-challenge-btn:hover { transform: scale(1.02); }
+    }
+  </style>
+</head>
+<body>
+  <div class="game-board">
+    <!-- Floating Hearts -->
+    <div class="floating-heart" style="top: 3%; left: 5%;">💑</div>
+    <div class="floating-heart" style="top: 8%; right: 8%;">💕</div>
+    <div class="floating-heart" style="bottom: 10%; left: 8%;">💘</div>
+    <div class="floating-heart" style="bottom: 15%; right: 12%;">💖</div>
 
-      <!-- GAME SCREEN (RECEIVER PLAYS) -->
-      <div id="gameContainer" class="container hidden">
-        <div class="status-area">
-          <span
-            ><i class="fas fa-heart"></i>
-            <span id="coupleNamesDisplay">💑</span></span
-          >
-          <span id="escapeCounter"
-            ><i class="fas fa-bolt"></i>
-            <span id="escapeCountDisplay">0</span> rejections</span
-          >
+    <!-- LANDING PAGE - CREATE CHALLENGE WITH QUESTION SELECTOR -->
+    <div id="landingContainer" class="landing-container">
+      <div class="setup-card">
+        <h1>💘 COUPLE CHALLENGE</h1>
+        
+        <div class="input-group">
+          <label><i class="fas fa-user"></i> YOUR NAME</label>
+          <input type="text" id="senderName" placeholder="e.g. John" value="Great">
         </div>
 
-        <div class="love-meter">
-          <div id="loveFill" class="love-fill" style="width: 20%"></div>
+        <div class="input-group">
+          <label><i class="fas fa-heart"></i> THEIR NAME</label>
+          <input type="text" id="receiverName" placeholder="e.g. Sarah" value="Sarah">
         </div>
 
-        <div id="questionContainer">
-          <video
-            class="local-gif"
-            src="Reply me love.mp4"
-            autoplay
-            muted
-            loop
-            playsinline
-          >
-            <source src="Reply me love.mp4" type="video/mp4" />
-          </video>
-
-          <h2 id="gameQuestion">do you love me? 💘</h2>
-
-          <div id="buttonContainer" class="button-container">
-            <button id="yesBtn" class="yes-btn">Yes 💖</button>
-            <div id="noDiv" class="no-div">No 😈</div>
-          </div>
-
-          <div class="couple-badge">
-            <i class="fas fa-heart"></i> playing for
-            <span id="senderNameDisplay">Great</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- RESULT SCREEN WITH RETURN STACK -->
-      <div id="resultContainer" class="container hidden">
-        <video
-          class="gif-result"
-          src="Love me.mp4"
-          autoplay
-          loop
-          playsinline
-          muted
-        >
-          <source src="Love me.mp4" type="video/mp4" />
-        </video>
-
-        <h2 id="resultMessage">she said YES! 🎉</h2>
-
-        <!-- RESULT CARD -->
-        <div
-          class="result-stats"
-          style="
-            background: white;
-            padding: 25px;
-            border-radius: 48px;
-            border: 4px solid #ffb6c1;
-            width: 100%;
-            max-width: 500px;
-            text-align: center;
-            margin: 15px 0;
-          "
-        >
-          <p style="font-size: 1.6rem; font-weight: 700; color: #59001c">
-            <span id="girlResultName">Sarah</span> rejected you
-          </p>
-          <p
-            style="
-              font-size: 4rem;
-              font-weight: 900;
-              color: #ff1a4a;
-              line-height: 1.2;
-            "
-          >
-            <span id="finalEscapeCount">0</span> 💔
-          </p>
-          <p style="font-size: 1.2rem; color: #681c2c; margin-top: 10px">
-            times before saying YES!
-          </p>
+        <!-- 🔥 NEW: LOVE QUESTION SELECTOR DROPDOWN -->
+        <div class="question-selector">
+          <label><i class="fas fa-question-circle" style="color: #ff4757;"></i> CHOOSE YOUR QUESTION</label>
+          <select id="questionSelect" class="question-dropdown">
+            <option value="do you love me">💕 Do you love me?</option>
+            <option value="would you be my valentine">🌹 Would you be my Valentine?</option>
+            <option value="would you marry me">💍 Would you marry me?</option>
+            <option value="do you like me">🥰 Do you like me?</option>
+            <option value="would you date me">🍫 Would you date me?</option>
+            <option value="will you be mine">💘 Will you be mine?</option>
+            <option value="are you in love with me">✨ Are you in love with me?</option>
+          </select>
         </div>
 
-        <!-- RETURN STACK - SEND RESULTS BACK TO SENDER -->
-        <div class="return-stack">
-          <div class="stack-header">
-            <h3><i class="fas fa-history"></i> RETURN STACK</h3>
-            <span
-              style="
-                background: #ffd700;
-                padding: 8px 16px;
-                border-radius: 40px;
-                font-weight: 700;
-              "
-              >NEW!</span
-            >
-          </div>
-
-          <!-- Result Card -->
-          <div class="result-card">
-            <div>
-              <div class="names">
-                <i class="fas fa-user"></i>
-                <span id="returnSenderName">Great</span>
-              </div>
-              <div style="color: #666; margin-top: 5px">
-                <span id="returnReceiverName">Sarah</span> played
-              </div>
-            </div>
-            <div>
-              <span class="rejection-badge" id="returnRejectionCount">0</span>
-            </div>
-          </div>
-
-          <!-- SEND RESULT TO SENDER (WHATSAPP) -->
-          <div
-            id="returnToSenderBtn"
-            class="whatsapp-share"
-            style="margin-bottom: 10px"
-          >
-            <i class="fab fa-whatsapp"></i> 📤 RETURN TO SENDER
-          </div>
-
-          <!-- SHARE TO MORE PEOPLE -->
-          <div id="shareMoreBtn" class="share-more-btn">
-            <i class="fas fa-share-alt"></i> SHARE TO MORE FRIENDS
-          </div>
+        <div class="input-group">
+          <label><i class="fab fa-whatsapp"></i> YOUR WHATSAPP NUMBER</label>
+          <input type="text" id="whatsappNumber" placeholder="2349166145024">
         </div>
 
-        <!-- PLAY AGAIN -->
-        <button
-          id="playAgainBtn"
-          style="
-            background: #ff8da1;
-            border: none;
-            border-radius: 60px;
-            padding: 16px 40px;
-            font-size: 1.5rem;
-            font-weight: bold;
-            color: #59001c;
-            box-shadow: 0 8px 0 #b36b6b;
-            border: 3px solid white;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 12px;
-            width: 100%;
-            max-width: 400px;
-            margin-top: 10px;
-          "
-        >
-          <i class="fas fa-redo-alt"></i> PLAY AGAIN
+        <button id="generateLinkBtn" class="generate-btn">
+          <i class="fas fa-gift"></i> GENERATE CHALLENGE
         </button>
-      </div>
 
-      <!-- HEART LOADER -->
-      <div id="heartLoader" class="heart-loader hidden">
-        <div>💓</div>
-        <p style="color: #b34a5a; margin-top: 25px; font-size: 1.6rem">
-          waiting for yes...
-        </p>
+        <!-- SHARE OPTIONS -->
+        <div id="shareOptionsContainer" class="share-options hidden">
+          <div class="share-title">
+            <i class="fas fa-share-alt"></i> SHARE CHALLENGE
+          </div>
+          
+          <div id="whatsappDirectShare" class="whatsapp-share-btn">
+            <i class="fab fa-whatsapp"></i> SHARE VIA WHATSAPP
+          </div>
+          
+          <div id="copyLinkBtn2" class="copy-link-btn">
+            <i class="fas fa-copy"></i> COPY LINK
+          </div>
+          
+          <div id="generatedLinkDisplay" style="margin-top: 15px; font-size: 0.8rem; color: #666; word-break: break-all; background: #ffeef0; padding: 12px; border-radius: 20px;"></div>
+        </div>
       </div>
     </div>
 
-    <script>
-      (function () {
-        "use strict";
+    <!-- GAME SCREEN - DYNAMIC QUESTION -->
+    <div id="gameContainer" class="container hidden">
+      <div class="status-area">
+        <span><i class="fas fa-heart"></i> <span id="coupleNamesDisplay">💑</span></span>
+        <span id="escapeCounter"><i class="fas fa-bolt"></i> <span id="escapeCountDisplay">0</span> rejections</span>
+      </div>
+      
+      <div class="love-meter">
+        <div id="loveFill" class="love-fill" style="width: 20%;"></div>
+      </div>
 
-        // ---------- URL PARAMS ----------
-        function getUrlParams() {
-          const params = new URLSearchParams(window.location.search);
-          return {
-            sender: params.get("sender") || null,
-            receiver: params.get("receiver") || null,
-            wa: params.get("wa") || null,
-            play: params.get("play") || null,
-          };
-        }
+      <div id="questionContainer">
+        <video class="local-gif" src="Reply me love.mp4" autoplay muted loop playsinline>
+          <source src="Reply me love.mp4" type="video/mp4">
+        </video>
+        
+        <!-- DYNAMIC QUESTION BASED ON SELECTION -->
+        <h2 id="gameQuestion">do you love me? 💘</h2>
+        
+        <div id="buttonContainer" class="button-container">
+          <button id="yesBtn" class="yes-btn">Yes 💖</button>
+          <div id="noDiv" class="no-div">No 😈</div>
+        </div>
+        
+        <div class="couple-badge">
+          <i class="fas fa-heart"></i> playing for <span id="senderNameDisplay">Great</span>
+        </div>
+        
+        <!-- QUESTION BADGE SHOWS WHAT THEY'RE ASKING -->
+        <div id="questionBadge" class="question-badge">
+          <i class="fas fa-question-circle"></i> <span id="questionDisplay">Do you love me?</span>
+        </div>
+      </div>
+    </div>
 
-        // ---------- ELEMENTS ----------
-        const landingContainer = document.getElementById("landingContainer");
-        const gameContainer = document.getElementById("gameContainer");
-        const resultContainer = document.getElementById("resultContainer");
-        const heartLoader = document.getElementById("heartLoader");
+    <!-- RESULT SCREEN WITH CUSTOMIZED MESSAGE -->
+    <div id="resultContainer" class="container hidden">
+      <video class="gif-result" src="Love me.mp4" autoplay loop playsinline muted>
+        <source src="Love me.mp4" type="video/mp4">
+      </video>
+      
+      <h2 id="resultMessage">she said YES! 🎉</h2>
+      
+      <!-- RESULT STATS WITH QUESTION CONTEXT -->
+      <div style="background: white; padding: 25px; border-radius: 48px; border: 4px solid #ffb6c1; width: 100%; max-width: 550px; text-align: center; margin: 15px 0;">
+        <p style="font-size: 1.4rem; font-weight: 700; color: #59001c;">
+          <span id="girlResultName">Sarah</span> said NO
+        </p>
+        <p style="font-size: 4rem; font-weight: 900; color: #ff1a4a; line-height: 1.2;">
+          <span id="finalEscapeCount">0</span> 💔
+        </p>
+        <p style="font-size: 1.3rem; color: #681c2c; margin-top: 10px;">
+          times before saying YES to <span id="resultQuestionDisplay">"Do you love me?"</span>
+        </p>
+      </div>
 
-        // Landing elements
-        const senderName = document.getElementById("senderName");
-        const receiverName = document.getElementById("receiverName");
-        const whatsappNumber = document.getElementById("whatsappNumber");
-        const generateBtn = document.getElementById("generateLinkBtn");
-        const shareOptionsContainer = document.getElementById(
-          "shareOptionsContainer",
-        );
-        const whatsappDirectShare = document.getElementById(
-          "whatsappDirectShare",
-        );
-        const copyLinkBtn2 = document.getElementById("copyLinkBtn2");
-        const generatedLinkDisplay = document.getElementById(
-          "generatedLinkDisplay",
-        );
+      <!-- RETURN STACK -->
+      <div class="return-stack">
+        <div class="stack-header">
+          <h3><i class="fas fa-history"></i> RETURN STACK</h3>
+          <span style="background: #ffd700; padding: 8px 16px; border-radius: 40px; font-weight: 700;">NEW!</span>
+        </div>
+        
+        <div class="result-card">
+          <div>
+            <div class="names"><i class="fas fa-user"></i> <span id="returnSenderName">Great</span></div>
+            <div style="color: #666; margin-top: 5px;"><span id="returnReceiverName">Sarah</span> answered <span id="returnQuestionText">💕</span></div>
+          </div>
+          <div>
+            <span class="rejection-badge" id="returnRejectionCount">0</span>
+          </div>
+        </div>
 
-        // Game elements
-        const yesBtn = document.getElementById("yesBtn");
-        let noDiv = document.getElementById("noDiv");
-        const buttonContainer = document.getElementById("buttonContainer");
-        const coupleNamesDisplay =
-          document.getElementById("coupleNamesDisplay");
-        const senderNameDisplay = document.getElementById("senderNameDisplay");
-        const gameQuestion = document.getElementById("gameQuestion");
-        const escapeCountDisplay =
-          document.getElementById("escapeCountDisplay");
-        const loveFill = document.getElementById("loveFill");
+        <div id="returnToSenderBtn" class="whatsapp-share" style="margin-bottom: 10px;">
+          <i class="fab fa-whatsapp"></i> 📤 RETURN TO SENDER
+        </div>
+      </div>
 
-        // Result elements
-        const finalEscapeCount = document.getElementById("finalEscapeCount");
-        const girlResultName = document.getElementById("girlResultName");
-        const resultMessage = document.getElementById("resultMessage");
-        const returnSenderName = document.getElementById("returnSenderName");
-        const returnReceiverName =
-          document.getElementById("returnReceiverName");
-        const returnRejectionCount = document.getElementById(
-          "returnRejectionCount",
-        );
-        const returnToSenderBtn = document.getElementById("returnToSenderBtn");
-        const shareMoreBtn = document.getElementById("shareMoreBtn");
-        const playAgainBtn = document.getElementById("playAgainBtn");
+      <!-- CREATE YOUR OWN CHALLENGE -->
+      <div class="create-challenge-section">
+        <div style="display: flex; justify-content: center; margin-bottom: 15px;">
+          <span style="background: #ffd700; padding: 8px 20px; border-radius: 50px; font-weight: 900; color: #59001c; border: 2px solid white;">
+            <i class="fas fa-crown"></i> CREATE YOUR CHALLENGE
+          </span>
+        </div>
+        
+        <button id="createOwnChallengeBtn" class="create-challenge-btn">
+          <i class="fas fa-plus-circle"></i> CREATE YOUR OWN CHALLENGE
+        </button>
+        
+        <div class="challenge-hint">
+          <i class="fas fa-users"></i> Choose your own question & challenge friends!
+          <i class="fas fa-heart" style="color: #ff4757;"></i>
+        </div>
+      </div>
 
-        // ---------- STATE ----------
-        let escapeCount = 0;
-        let loveLevel = 20;
-        let gameActive = false;
-        let currentGameData = {
-          sender: "Great",
-          receiver: "Sarah",
-          wa: "",
+      <!-- PLAY AGAIN -->
+      <button id="playAgainBtn" style="
+        background: #ff8da1; 
+        border: none; 
+        border-radius: 60px; 
+        padding: 16px 40px; 
+        font-size: 1.5rem;
+        font-weight: bold;
+        color: #59001c;
+        box-shadow: 0 8px 0 #b36b6b;
+        border: 3px solid white;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 12px;
+        width: 100%;
+        max-width: 450px;
+        margin-top: 15px;
+      ">
+        <i class="fas fa-redo-alt"></i> PLAY AGAIN
+      </button>
+    </div>
+
+    <!-- HEART LOADER -->
+    <div id="heartLoader" class="heart-loader hidden">
+      <div>💓</div>
+      <p style="color:#b34a5a; margin-top: 25px; font-size: 1.6rem;">waiting for answer...</p>
+    </div>
+  </div>
+
+  <script>
+    (function() {
+      'use strict';
+
+      // ---------- LOVE QUESTIONS DATABASE ----------
+      const LOVE_QUESTIONS = {
+        'do you love me': 'Do you love me? 💘',
+        'would you be my valentine': 'Would you be my Valentine? 🌹',
+        'would you marry me': 'Would you marry me? 💍',
+        'do you like me': 'Do you like me? 🥰',
+        'would you date me': 'Would you date me? 🍫',
+        'will you be mine': 'Will you be mine? 💘',
+        'are you in love with me': 'Are you in love with me? ✨'
+      };
+
+      // ---------- URL PARAMS ----------
+      function getUrlParams() {
+        const params = new URLSearchParams(window.location.search);
+        return {
+          sender: params.get('sender') || null,
+          receiver: params.get('receiver') || null,
+          wa: params.get('wa') || null,
+          question: params.get('question') || 'do you love me',
+          play: params.get('play') || null
         };
+      }
 
-        // ---------- GENERATE COUPLE LINK ----------
-        function generateCoupleLink() {
-          const sender = encodeURIComponent(senderName.value.trim() || "Great");
-          const receiver = encodeURIComponent(
-            receiverName.value.trim() || "Sarah",
-          );
-          let wa = whatsappNumber.value.trim().replace(/\s/g, "");
-          if (wa.startsWith("+")) wa = wa.substring(1);
+      // ---------- ELEMENTS ----------
+      const landingContainer = document.getElementById('landingContainer');
+      const gameContainer = document.getElementById('gameContainer');
+      const resultContainer = document.getElementById('resultContainer');
+      const heartLoader = document.getElementById('heartLoader');
+      
+      // Landing elements
+      const senderName = document.getElementById('senderName');
+      const receiverName = document.getElementById('receiverName');
+      const questionSelect = document.getElementById('questionSelect');
+      const whatsappNumber = document.getElementById('whatsappNumber');
+      const generateBtn = document.getElementById('generateLinkBtn');
+      const shareOptionsContainer = document.getElementById('shareOptionsContainer');
+      const whatsappDirectShare = document.getElementById('whatsappDirectShare');
+      const copyLinkBtn2 = document.getElementById('copyLinkBtn2');
+      const generatedLinkDisplay = document.getElementById('generatedLinkDisplay');
 
-          const baseUrl = window.location.href.split("?")[0];
-          return `${baseUrl}?sender=${sender}&receiver=${receiver}&wa=${wa}&play=true`;
-        }
+      // Game elements
+      const yesBtn = document.getElementById('yesBtn');
+      let noDiv = document.getElementById('noDiv');
+      const buttonContainer = document.getElementById('buttonContainer');
+      const coupleNamesDisplay = document.getElementById('coupleNamesDisplay');
+      const senderNameDisplay = document.getElementById('senderNameDisplay');
+      const gameQuestion = document.getElementById('gameQuestion');
+      const questionDisplay = document.getElementById('questionDisplay');
+      const escapeCountDisplay = document.getElementById('escapeCountDisplay');
+      const loveFill = document.getElementById('loveFill');
+      
+      // Result elements
+      const finalEscapeCount = document.getElementById('finalEscapeCount');
+      const girlResultName = document.getElementById('girlResultName');
+      const resultMessage = document.getElementById('resultMessage');
+      const resultQuestionDisplay = document.getElementById('resultQuestionDisplay');
+      const returnSenderName = document.getElementById('returnSenderName');
+      const returnReceiverName = document.getElementById('returnReceiverName');
+      const returnQuestionText = document.getElementById('returnQuestionText');
+      const returnRejectionCount = document.getElementById('returnRejectionCount');
+      const returnToSenderBtn = document.getElementById('returnToSenderBtn');
+      const createOwnChallengeBtn = document.getElementById('createOwnChallengeBtn');
+      const playAgainBtn = document.getElementById('playAgainBtn');
 
-        // ---------- GENERATE LINK AND SHOW SHARE OPTIONS ----------
-        generateBtn.addEventListener("click", function () {
-          const link = generateCoupleLink();
-          generatedLinkDisplay.innerText = link;
-          shareOptionsContainer.classList.remove("hidden");
+      // ---------- STATE ----------
+      let escapeCount = 0;
+      let loveLevel = 20;
+      let gameActive = false;
+      let currentGameData = {
+        sender: 'Great',
+        receiver: 'Sarah',
+        wa: '',
+        question: 'do you love me'
+      };
 
-          // Store current data
-          currentGameData = {
-            sender: senderName.value.trim() || "Great",
-            receiver: receiverName.value.trim() || "Sarah",
-            wa: whatsappNumber.value.trim().replace(/\s/g, ""),
-          };
-        });
+      // ---------- HELPER: Get question display text ----------
+      function getQuestionDisplay(questionKey) {
+        return LOVE_QUESTIONS[questionKey] || 'Do you love me? 💘';
+      }
 
-        // ---------- DIRECT WHATSAPP SHARE ----------
-        whatsappDirectShare.addEventListener("click", function () {
-          const link = generateCoupleLink();
-          const sender = senderName.value.trim() || "Great";
-          const receiver = receiverName.value.trim() || "Sarah";
+      // ---------- GENERATE COUPLE LINK WITH QUESTION ----------
+      function generateCoupleLink(sender, receiver, wa, question) {
+        const encodedSender = encodeURIComponent(sender || 'Great');
+        const encodedReceiver = encodeURIComponent(receiver || 'Sarah');
+        const encodedQuestion = encodeURIComponent(question || 'do you love me');
+        let encodedWa = wa ? wa.replace(/\s/g, '') : '';
+        if (encodedWa.startsWith('+')) encodedWa = encodedWa.substring(1);
+        
+        const baseUrl = window.location.href.split('?')[0];
+        return `${baseUrl}?sender=${encodedSender}&receiver=${encodedReceiver}&question=${encodedQuestion}&wa=${encodedWa}&play=true`;
+      }
 
-          const message = encodeURIComponent(
-            `💘 *COUPLE CHALLENGE* 💘\n\n` +
-              `Hey! I created a challenge for you ❤️\n\n` +
-              `👉 *${sender}* challenged *${receiver}*\n\n` +
-              `Can you catch the "No" button? Try it!\n\n` +
-              `🎮 PLAY HERE: ${link}\n\n` +
-              `#CoupleChallenge #Valentine`,
-          );
+      // ---------- GENERATE LINK AND SHOW SHARE OPTIONS ----------
+      generateBtn.addEventListener('click', function() {
+        const selectedQuestion = questionSelect.value;
+        const link = generateCoupleLink(
+          senderName.value.trim(),
+          receiverName.value.trim(),
+          whatsappNumber.value.trim(),
+          selectedQuestion
+        );
+        generatedLinkDisplay.innerText = link;
+        shareOptionsContainer.classList.remove('hidden');
+        
+        currentGameData = {
+          sender: senderName.value.trim() || 'Great',
+          receiver: receiverName.value.trim() || 'Sarah',
+          wa: whatsappNumber.value.trim().replace(/\s/g, ''),
+          question: selectedQuestion
+        };
+      });
 
-          window.open(`https://wa.me/?text=${message}`, "_blank");
-        });
+      // ---------- DIRECT WHATSAPP SHARE WITH QUESTION ----------
+      whatsappDirectShare.addEventListener('click', function() {
+        const selectedQuestion = questionSelect.value;
+        const questionText = getQuestionDisplay(selectedQuestion);
+        const link = generateCoupleLink(
+          senderName.value.trim(),
+          receiverName.value.trim(),
+          whatsappNumber.value.trim(),
+          selectedQuestion
+        );
+        const sender = senderName.value.trim() || 'Great';
+        const receiver = receiverName.value.trim() || 'Sarah';
+        
+        const message = encodeURIComponent(
+          `💘 *COUPLE CHALLENGE* 💘\n\n` +
+          `Hey! I created a challenge for you ❤️\n\n` +
+          `👉 *${sender}* is asking: *"${questionText}"*\n\n` +
+          `Can you catch the "No" button? Try it!\n\n` +
+          `🎮 PLAY HERE: ${link}\n\n` +
+          `#CoupleChallenge #Valentine`
+        );
+        
+        window.open(`https://wa.me/?text=${message}`, '_blank');
+      });
 
-        // ---------- COPY LINK ----------
-        copyLinkBtn2.addEventListener("click", function () {
-          const link = generatedLinkDisplay.innerText;
-          navigator.clipboard.writeText(link).then(() => {
-            copyLinkBtn2.innerHTML = '<i class="fas fa-check"></i> COPIED!';
-            setTimeout(() => {
-              copyLinkBtn2.innerHTML = '<i class="fas fa-copy"></i> COPY LINK';
-            }, 2000);
-          });
-        });
-
-        // ---------- INIT GAME FROM URL ----------
-        function initGameFromUrl() {
-          const params = getUrlParams();
-
-          if (params.play === "true" && params.sender) {
-            // Hide landing, show game
-            landingContainer.classList.add("hidden");
-            gameContainer.classList.remove("hidden");
-            resultContainer.classList.add("hidden");
-            heartLoader.classList.add("hidden");
-
-            // Save game data
-            currentGameData = {
-              sender: decodeURIComponent(params.sender) || "Great",
-              receiver: decodeURIComponent(params.receiver || "Sarah"),
-              wa: decodeURIComponent(params.wa || ""),
-            };
-
-            // Update UI
-            coupleNamesDisplay.innerHTML = `${currentGameData.sender} 💕 ${currentGameData.receiver}`;
-            senderNameDisplay.innerText = currentGameData.sender;
-            gameQuestion.innerHTML = `${currentGameData.receiver}, do you love me? 💘`;
-            girlResultName.innerText = currentGameData.receiver;
-            resultMessage.innerHTML = `${currentGameData.receiver} said YES! 🎉`;
-
-            // Reset game
-            gameActive = true;
-            escapeCount = 0;
-            loveLevel = 20;
-            loveFill.style.width = "20%";
-            updateStats();
-
-            setTimeout(() => {
-              setupNoDiv();
-            }, 100);
-          }
-        }
-
-        // ---------- UPDATE STATS ----------
-        function updateStats() {
-          escapeCountDisplay.innerText = escapeCount;
-          document.getElementById("escapeCounter").innerHTML =
-            `<i class="fas fa-bolt"></i> ${escapeCount} rejections`;
-          loveLevel = Math.min(99, 20 + escapeCount * 4);
-          loveFill.style.width = loveLevel + "%";
-
-          // Update result displays
-          if (finalEscapeCount) finalEscapeCount.innerText = escapeCount;
-          if (returnRejectionCount)
-            returnRejectionCount.innerText = escapeCount;
-          if (returnSenderName)
-            returnSenderName.innerText = currentGameData.sender;
-          if (returnReceiverName)
-            returnReceiverName.innerText = currentGameData.receiver;
-        }
-
-        // ---------- MOVE NO DIV ----------
-        function moveNoDiv() {
-          if (!gameActive) return;
-          if (!noDiv || !buttonContainer) return;
-
-          const containerRect = buttonContainer.getBoundingClientRect();
-          if (containerRect.width === 0) return;
-
-          const noWidth = noDiv.offsetWidth;
-          const noHeight = noDiv.offsetHeight;
-
-          const maxX = Math.max(10, containerRect.width - noWidth - 15);
-          const maxY = Math.max(10, containerRect.height - noHeight - 15);
-          const minX = 8;
-          const minY = 8;
-
-          let currLeft = parseFloat(noDiv.style.left);
-          let currTop = parseFloat(noDiv.style.top);
-
-          if (isNaN(currLeft)) currLeft = containerRect.width * 0.7;
-          if (isNaN(currTop)) currTop = containerRect.height * 0.3;
-
-          const moveRange = Math.min(280, containerRect.width * 0.4);
-          let newLeft = currLeft + (Math.random() * moveRange - moveRange / 2);
-          let newTop = currTop + (Math.random() * moveRange - moveRange / 2);
-
-          newLeft = Math.min(maxX, Math.max(minX, newLeft));
-          newTop = Math.min(maxY, Math.max(minY, newTop));
-
-          noDiv.style.left = newLeft + "px";
-          noDiv.style.top = newTop + "px";
-
-          escapeCount++;
-          updateStats();
-        }
-
-        // ---------- SETUP NO DIV ----------
-        function setupNoDiv() {
-          const oldNo = document.getElementById("noDiv");
-          if (oldNo) {
-            const newNo = oldNo.cloneNode(false);
-            newNo.className = "no-div";
-            newNo.textContent = "No 😈";
-            oldNo.parentNode.replaceChild(newNo, oldNo);
-            noDiv = newNo;
-          }
-
-          const rect = buttonContainer.getBoundingClientRect();
-          if (rect.width > 0) {
-            noDiv.style.left = rect.width * 0.7 + "px";
-            noDiv.style.top = rect.height * 0.3 + "px";
-          }
-
-          // Event listeners
-          noDiv.addEventListener("mouseenter", (e) => {
-            e.preventDefault();
-            moveNoDiv();
-          });
-          noDiv.addEventListener(
-            "touchstart",
-            (e) => {
-              e.preventDefault();
-              moveNoDiv();
-            },
-            { passive: false },
-          );
-          noDiv.addEventListener(
-            "touchmove",
-            (e) => {
-              e.preventDefault();
-              moveNoDiv();
-            },
-            { passive: false },
-          );
-          noDiv.addEventListener("click", (e) => {
-            e.preventDefault();
-            moveNoDiv();
-          });
-        }
-
-        // ---------- YES BUTTON ----------
-        yesBtn.addEventListener("click", function (e) {
-          e.preventDefault();
-          if (!gameActive) return;
-
-          gameActive = false;
-
-          // Update return stack with final count
-          returnRejectionCount.innerText = escapeCount;
-          returnSenderName.innerText = currentGameData.sender;
-          returnReceiverName.innerText = currentGameData.receiver;
-
-          // Show loader then results
-          gameContainer.classList.add("hidden");
-          heartLoader.classList.remove("hidden");
-
+      // ---------- COPY LINK ----------
+      copyLinkBtn2.addEventListener('click', function() {
+        const link = generatedLinkDisplay.innerText;
+        navigator.clipboard.writeText(link).then(() => {
+          copyLinkBtn2.innerHTML = '<i class="fas fa-check"></i> COPIED!';
           setTimeout(() => {
-            heartLoader.classList.add("hidden");
-            resultContainer.classList.remove("hidden");
-            finalEscapeCount.innerText = escapeCount;
+            copyLinkBtn2.innerHTML = '<i class="fas fa-copy"></i> COPY LINK';
           }, 2000);
         });
+      });
 
-        // ---------- RETURN TO SENDER (WHATSAPP) ----------
-        function returnToSender() {
-          if (!currentGameData.wa) {
-            alert("❌ No WhatsApp number found!");
-            return;
-          }
-
-          let waNumber = currentGameData.wa.replace(/\D/g, "");
-
-          const message = encodeURIComponent(
-            `💘 *CHALLENGE COMPLETED!* 💘\n\n` +
-              `✨ *${currentGameData.receiver}* played your challenge! ✨\n\n` +
-              `💔 *REJECTIONS: ${escapeCount} times!*\n` +
-              `😭 She said NO ${escapeCount} times before saying YES!\n\n` +
-              `✅ *FINAL: SHE SAID YES!* ✅\n\n` +
-              `🎮 Play again: ${window.location.href.split("?")[0]}?sender=${encodeURIComponent(currentGameData.sender)}&receiver=${encodeURIComponent(currentGameData.receiver)}&wa=${waNumber}&play=true\n\n` +
-              `#CoupleChallenge #SheSaidYes`,
-          );
-
-          window.open(`https://wa.me/${waNumber}?text=${message}`, "_blank");
-        }
-
-        // ---------- SHARE TO MORE FRIENDS ----------
-        function shareToMore() {
-          const message = encodeURIComponent(
-            `💘 *COUPLE CHALLENGE* 💘\n\n` +
-              `😈 Can you catch the impossible "No" button?\n\n` +
-              `✨ ${currentGameData.receiver} got rejected ${escapeCount} times!\n\n` +
-              `🎮 Play here: ${window.location.href.split("?")[0]}?sender=${encodeURIComponent(currentGameData.sender)}&receiver=YOUR_NAME&wa=&play=true\n\n` +
-              `#CoupleChallenge #CatchTheNo`,
-          );
-
-          window.open(`https://wa.me/?text=${message}`, "_blank");
-        }
-
-        // ---------- ATTACH EVENT LISTENERS ----------
-        returnToSenderBtn.addEventListener("click", returnToSender);
-        shareMoreBtn.addEventListener("click", shareToMore);
-
-        // ---------- PLAY AGAIN ----------
-        playAgainBtn.addEventListener("click", function () {
-          resultContainer.classList.add("hidden");
-          gameContainer.classList.remove("hidden");
-
+      // ---------- INIT GAME FROM URL WITH QUESTION ----------
+      function initGameFromUrl() {
+        const params = getUrlParams();
+        
+        if (params.play === 'true' && params.sender) {
+          landingContainer.classList.add('hidden');
+          gameContainer.classList.remove('hidden');
+          resultContainer.classList.add('hidden');
+          heartLoader.classList.add('hidden');
+          
+          const questionKey = params.question || 'do you love me';
+          const questionText = getQuestionDisplay(questionKey);
+          
+          currentGameData = {
+            sender: decodeURIComponent(params.sender) || 'Great',
+            receiver: decodeURIComponent(params.receiver || 'Sarah'),
+            wa: decodeURIComponent(params.wa || ''),
+            question: questionKey
+          };
+          
+          // Update UI with names and question
+          coupleNamesDisplay.innerHTML = `${currentGameData.sender} 💕 ${currentGameData.receiver}`;
+          senderNameDisplay.innerText = currentGameData.sender;
+          gameQuestion.innerHTML = `${currentGameData.receiver}, ${questionText.toLowerCase()}`;
+          questionDisplay.innerText = questionText;
+          girlResultName.innerText = currentGameData.receiver;
+          resultQuestionDisplay.innerText = questionText;
+          returnQuestionText.innerText = questionText;
+          
+          // Dynamic result message based on gender
+          const receiverName_lower = currentGameData.receiver;
+          resultMessage.innerHTML = `${receiverName_lower} said YES! 🎉`;
+          
           gameActive = true;
           escapeCount = 0;
           loveLevel = 20;
-          loveFill.style.width = "20%";
+          loveFill.style.width = '20%';
           updateStats();
-
+          
           setTimeout(() => {
             setupNoDiv();
           }, 100);
-        });
+        }
+      }
 
-        // ---------- RESIZE HANDLER ----------
-        window.addEventListener("resize", function () {
-          if (noDiv && buttonContainer && gameActive) {
-            const rect = buttonContainer.getBoundingClientRect();
-            if (rect.width > 0) {
-              let left = parseFloat(noDiv.style.left);
-              let top = parseFloat(noDiv.style.top);
-              if (isNaN(left)) left = rect.width * 0.7;
-              if (isNaN(top)) top = rect.height * 0.3;
+      // ---------- UPDATE STATS ----------
+      function updateStats() {
+        escapeCountDisplay.innerText = escapeCount;
+        document.getElementById('escapeCounter').innerHTML = `<i class="fas fa-bolt"></i> ${escapeCount} rejections`;
+        loveLevel = Math.min(99, 20 + escapeCount * 4);
+        loveFill.style.width = loveLevel + '%';
+        
+        if (finalEscapeCount) finalEscapeCount.innerText = escapeCount;
+        if (returnRejectionCount) returnRejectionCount.innerText = escapeCount;
+        if (returnSenderName) returnSenderName.innerText = currentGameData.sender;
+        if (returnReceiverName) returnReceiverName.innerText = currentGameData.receiver;
+      }
 
-              const maxX = Math.max(10, rect.width - noDiv.offsetWidth - 15);
-              const maxY = Math.max(10, rect.height - noDiv.offsetHeight - 15);
+      // ---------- MOVE NO DIV ----------
+      function moveNoDiv() {
+        if (!gameActive) return;
+        if (!noDiv || !buttonContainer) return;
 
-              noDiv.style.left = Math.min(maxX, Math.max(10, left)) + "px";
-              noDiv.style.top = Math.min(maxY, Math.max(10, top)) + "px";
-            }
+        const containerRect = buttonContainer.getBoundingClientRect();
+        if (containerRect.width === 0) return;
+
+        const noWidth = noDiv.offsetWidth;
+        const noHeight = noDiv.offsetHeight;
+        
+        const maxX = Math.max(10, containerRect.width - noWidth - 15);
+        const maxY = Math.max(10, containerRect.height - noHeight - 15);
+        const minX = 8;
+        const minY = 8;
+
+        let currLeft = parseFloat(noDiv.style.left);
+        let currTop = parseFloat(noDiv.style.top);
+        
+        if (isNaN(currLeft)) currLeft = containerRect.width * 0.7;
+        if (isNaN(currTop)) currTop = containerRect.height * 0.3;
+
+        const moveRange = Math.min(280, containerRect.width * 0.4);
+        let newLeft = currLeft + (Math.random() * moveRange - moveRange/2);
+        let newTop = currTop + (Math.random() * moveRange - moveRange/2);
+
+        newLeft = Math.min(maxX, Math.max(minX, newLeft));
+        newTop = Math.min(maxY, Math.max(minY, newTop));
+
+        noDiv.style.left = newLeft + 'px';
+        noDiv.style.top = newTop + 'px';
+
+        escapeCount++;
+        updateStats();
+      }
+
+      // ---------- SETUP NO DIV ----------
+      function setupNoDiv() {
+        const oldNo = document.getElementById('noDiv');
+        if (oldNo) {
+          const newNo = oldNo.cloneNode(false);
+          newNo.className = 'no-div';
+          newNo.textContent = 'No 😈';
+          oldNo.parentNode.replaceChild(newNo, oldNo);
+          noDiv = newNo;
+        }
+
+        const rect = buttonContainer.getBoundingClientRect();
+        if (rect.width > 0) {
+          noDiv.style.left = (rect.width * 0.7) + 'px';
+          noDiv.style.top = (rect.height * 0.3) + 'px';
+        }
+
+        noDiv.addEventListener('mouseenter', (e) => { e.preventDefault(); moveNoDiv(); });
+        noDiv.addEventListener('touchstart', (e) => { e.preventDefault(); moveNoDiv(); }, { passive: false });
+        noDiv.addEventListener('touchmove', (e) => { e.preventDefault(); moveNoDiv(); }, { passive: false });
+        noDiv.addEventListener('click', (e) => { e.preventDefault(); moveNoDiv(); });
+      }
+
+      // ---------- YES BUTTON ----------
+      yesBtn.addEventListener('click', function(e) {
+        e.preventDefault();
+        if (!gameActive) return;
+        
+        gameActive = false;
+        
+        returnRejectionCount.innerText = escapeCount;
+        returnSenderName.innerText = currentGameData.sender;
+        returnReceiverName.innerText = currentGameData.receiver;
+        returnQuestionText.innerText = getQuestionDisplay(currentGameData.question);
+        
+        gameContainer.classList.add('hidden');
+        heartLoader.classList.remove('hidden');
+        
+        setTimeout(() => {
+          heartLoader.classList.add('hidden');
+          resultContainer.classList.remove('hidden');
+          finalEscapeCount.innerText = escapeCount;
+          resultQuestionDisplay.innerText = getQuestionDisplay(currentGameData.question);
+        }, 2000);
+      });
+
+      // ---------- RETURN TO SENDER WITH QUESTION ----------
+      function returnToSender() {
+        if (!currentGameData.wa) {
+          alert('❌ No WhatsApp number found!');
+          return;
+        }
+
+        let waNumber = currentGameData.wa.replace(/\D/g, '');
+        const questionText = getQuestionDisplay(currentGameData.question);
+        
+        const message = encodeURIComponent(
+          `💘 *CHALLENGE COMPLETED!* 💘\n\n` +
+          `✨ *${currentGameData.receiver}* answered your challenge! ✨\n\n` +
+          `❓ Your question: *"${questionText}"*\n\n` +
+          `💔 *REJECTIONS: ${escapeCount} times!*\n` +
+          `😭 ${currentGameData.receiver} said NO ${escapeCount} times before saying YES!\n\n` +
+          `✅ *FINAL: SHE SAID YES!* ✅\n\n` +
+          `🎮 Play again: ${window.location.href.split('?')[0]}?sender=${encodeURIComponent(currentGameData.sender)}&receiver=${encodeURIComponent(currentGameData.receiver)}&question=${encodeURIComponent(currentGameData.question)}&wa=${waNumber}&play=true\n\n` +
+          `#CoupleChallenge #SheSaidYes`
+        );
+        
+        window.open(`https://wa.me/${waNumber}?text=${message}`, '_blank');
+      }
+
+      returnToSenderBtn.addEventListener('click', returnToSender);
+
+      // ---------- CREATE YOUR OWN CHALLENGE - PRESERVE QUESTION ----------
+      function createOwnChallenge() {
+        // Pre-fill the landing page with their names + keep selected question
+        senderName.value = currentGameData.receiver; // The player becomes the sender
+        receiverName.value = ''; // Empty for them to fill
+        
+        // Set the dropdown to the same question they just answered
+        if (currentGameData.question) {
+          questionSelect.value = currentGameData.question;
+        }
+        
+        whatsappNumber.value = ''; // Empty for them to add
+        
+        // Hide result, show landing
+        resultContainer.classList.add('hidden');
+        landingContainer.classList.remove('hidden');
+        gameContainer.classList.add('hidden');
+        heartLoader.classList.add('hidden');
+        
+        // Clear previous share options
+        shareOptionsContainer.classList.add('hidden');
+        generatedLinkDisplay.innerText = '';
+        
+        // Focus on receiver name
+        receiverName.focus();
+        
+        // Show success message
+        setTimeout(() => {
+          alert(`🎉 Create YOUR challenge with the question: "${getQuestionDisplay(currentGameData.question)}"! Add their name and share!`);
+        }, 100);
+      }
+
+      createOwnChallengeBtn.addEventListener('click', createOwnChallenge);
+
+      // ---------- PLAY AGAIN ----------
+      playAgainBtn.addEventListener('click', function() {
+        resultContainer.classList.add('hidden');
+        gameContainer.classList.remove('hidden');
+        
+        gameActive = true;
+        escapeCount = 0;
+        loveLevel = 20;
+        loveFill.style.width = '20%';
+        updateStats();
+        
+        setTimeout(() => {
+          setupNoDiv();
+        }, 100);
+      });
+
+      // ---------- RESIZE HANDLER ----------
+      window.addEventListener('resize', function() {
+        if (noDiv && buttonContainer && gameActive) {
+          const rect = buttonContainer.getBoundingClientRect();
+          if (rect.width > 0) {
+            let left = parseFloat(noDiv.style.left);
+            let top = parseFloat(noDiv.style.top);
+            if (isNaN(left)) left = rect.width * 0.7;
+            if (isNaN(top)) top = rect.height * 0.3;
+            
+            const maxX = Math.max(10, rect.width - noDiv.offsetWidth - 15);
+            const maxY = Math.max(10, rect.height - noDiv.offsetHeight - 15);
+            
+            noDiv.style.left = Math.min(maxX, Math.max(10, left)) + 'px';
+            noDiv.style.top = Math.min(maxY, Math.max(10, top)) + 'px';
           }
-        });
+        }
+      });
 
-        // ---------- INIT ----------
-        window.addEventListener("load", function () {
-          initGameFromUrl();
-        });
-      })();
-    </script>
-  </body>
+      // ---------- INIT ----------
+      window.addEventListener('load', function() {
+        initGameFromUrl();
+      });
+
+    })();
+  </script>
+</body>
 </html>
