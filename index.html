@@ -8,6 +8,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300..700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
   <style>
+    /* ALL YOUR EXISTING CSS STAYS EXACTLY THE SAME */
     * {
       padding: 0;
       margin: 0;
@@ -80,7 +81,6 @@
       display: none !important;
     }
 
-    /* ----- LANDING PAGE WITH QUESTION DROPDOWN ----- */
     .setup-card {
       background: rgba(255, 220, 240, 0.8);
       backdrop-filter: blur(10px);
@@ -131,7 +131,6 @@
       width: 100%;
     }
 
-    /* ----- NEW: QUESTION SELECTOR DROPDOWN ----- */
     .question-selector {
       background: linear-gradient(145deg, #fff9fb, #fff0f5);
       border-radius: 60px;
@@ -168,18 +167,6 @@
       background-repeat: no-repeat;
       background-position: right 20px center;
       background-size: 30px;
-    }
-
-    .question-dropdown:focus {
-      outline: none;
-      border-color: #ff4757;
-      box-shadow: 0 0 0 3px rgba(255, 71, 87, 0.2);
-    }
-
-    .question-dropdown option {
-      font-family: 'Quicksand', sans-serif;
-      padding: 15px;
-      font-size: 1.2rem;
     }
 
     .generate-btn {
@@ -261,7 +248,6 @@
       width: 100%;
     }
 
-    /* ----- GAME SCREEN ----- */
     .status-area {
       display: flex;
       justify-content: space-between;
@@ -407,7 +393,6 @@
       gap: 10px;
     }
 
-    /* ----- RETURN STACK & CREATE NEW CHALLENGE ----- */
     .return-stack {
       background: rgba(255, 240, 245, 0.95);
       border-radius: 48px;
@@ -576,7 +561,7 @@
           <input type="text" id="receiverName" placeholder="e.g. Sarah" value="Sarah">
         </div>
 
-        <!-- 🔥 NEW: LOVE QUESTION SELECTOR DROPDOWN -->
+        <!-- LOVE QUESTION SELECTOR DROPDOWN -->
         <div class="question-selector">
           <label><i class="fas fa-question-circle" style="color: #ff4757;"></i> CHOOSE YOUR QUESTION</label>
           <select id="questionSelect" class="question-dropdown">
@@ -861,7 +846,7 @@
         };
       });
 
-      // ---------- DIRECT WHATSAPP SHARE WITH QUESTION ----------
+      // ---------- FIXED: DIRECT WHATSAPP SHARE WITH QUESTION ----------
       whatsappDirectShare.addEventListener('click', function() {
         const selectedQuestion = questionSelect.value;
         const questionText = getQuestionDisplay(selectedQuestion);
@@ -877,10 +862,10 @@
         const message = encodeURIComponent(
           `💘 *COUPLE CHALLENGE* 💘\n\n` +
           `Hey! I created a challenge for you ❤️\n\n` +
-          `👉 *${sender}* has a secret question for you*\n\n` +
+          `👉 *${sender}* is asking: *"${questionText}"*\n\n` +
           `Can you catch the "No" button? Try it!\n\n` +
           `🎮 PLAY HERE: ${link}\n\n` +
-  
+          `#CoupleChallenge #Valentine`
         );
         
         window.open(`https://wa.me/?text=${message}`, '_blank');
